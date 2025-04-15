@@ -1,0 +1,111 @@
+Q1
+#include<stdio.h>
+int main()
+{
+     float weight[50],profit[50],ratio[50],Totalvalue,temp,capacity,amount;
+     int n,i,j;
+     printf("Enter the number of items :");
+     scanf("%d",&n);   
+    for (i = 0; i < n; i++)
+    {
+        printf("Enter Weight and Profit for item[%d] :\n",i);
+        scanf("%f %f", &weight[i], &profit[i]);
+    } 
+    printf("Enter the capacity of knapsack :\n");
+    scanf("%f",&capacity);
+     
+     for(i=0;i<n;i++)
+         ratio[i]=profit[i]/weight[i];
+         
+    for (i = 0; i < n; i++) 
+      for (j = i + 1; j < n; j++) 
+         if (ratio[i] < ratio[j]) 
+        {
+            temp = ratio[j];
+            ratio[j] = ratio[i];
+            ratio[i] = temp;
+ 
+            temp = weight[j];
+            weight[j] = weight[i];
+            weight[i] = temp;
+ 
+            temp = profit[j];
+            profit[j] = profit[i];
+            profit[i] = temp;
+         }
+    
+     printf("Knapsack problems using Greedy Algorithm:\n");
+     for (i = 0; i < n; i++) 
+     {
+      if (weight[i] > capacity)
+          break;
+       else 
+      {
+          Totalvalue = Totalvalue + profit[i];
+          capacity = capacity - weight[i];
+       }
+     } 
+       if (i < n)
+       Totalvalue = Totalvalue + (ratio[i]*capacity);
+     printf("\nThe maximum value is :%f\n",Totalvalue);     
+     return 0;
+}
+
+Q2
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+
+#define MAX 10
+
+int tspNearestNeighbor(int graph[MAX][MAX], int n, int start) {
+    bool visited[MAX] = {false};
+    int cost = 0;
+    int current = start;
+    
+    visited[current] = true;
+    printf("Tour: %d -> ", current);
+
+    for (int count = 1; count < n; count++) {
+        int nearest = -1;
+        int minDist = INT_MAX;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && graph[current][i] && graph[current][i] < minDist) {
+                minDist = graph[current][i];
+                nearest = i;
+            }
+        }
+
+        if (nearest == -1) break;
+
+        visited[nearest] = true;
+        cost += minDist;
+        current = nearest;
+        printf("%d -> ", current);
+    }
+
+    cost += graph[current][start];  // return to starting city
+    printf("%d\n", start);
+    return cost;
+}
+
+int main() {
+    int graph[MAX][MAX], n, start;
+
+    printf("Enter number of cities: ");
+    scanf("%d", &n);
+
+    printf("Enter the distance matrix:\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &graph[i][j]);
+
+    printf("Enter starting city (0 to %d): ", n-1);
+    scanf("%d", &start);
+
+    int totalCost = tspNearestNeighbor(graph, n, start);
+    printf("Total cost of tour: %d\n", totalCost);
+
+    return 0;
+}
