@@ -1,0 +1,149 @@
+Q1
+#include <stdio.h>
+
+int counter = 0; // Counter to track operations (comparisons + swaps)
+
+// Function to adjust the heap
+void adjust(int a[], int i, int n)
+{
+    int temp = a[i];
+    int j = 2 * i + 1; // Left child index
+
+    while (j < n)
+    {
+        counter++; // Counting comparisons
+
+        // Select the larger child
+        if (j + 1 < n && a[j] < a[j + 1])
+        {
+            j = j + 1;
+        }
+
+        counter++; // Counting comparisons
+
+        // If the parent is greater than or equal to the largest child, stop
+        if (temp >= a[j])
+            break;
+
+        counter++;   // Counting swaps
+        a[i] = a[j]; // Move the larger child up
+        i = j;
+        j = 2 * i + 1;
+    }
+    a[i] = temp;
+}
+
+// Function to build a max heap
+void heapify(int a[], int n)
+{
+    for (int i = n / 2 - 1; i >= 0; i--)
+    {
+        adjust(a, i, n);
+    }
+}
+
+// Function to perform Heap Sort
+void heap_sort(int a[], int n)
+{
+    heapify(a, n); // Build max heap
+
+    // Extract elements one by one from heap
+    for (int i = n - 1; i > 0; i--)
+    {
+        // Swap the root (largest) with the last element
+        counter++; // Counting swaps
+        int temp = a[0];
+        a[0] = a[i];
+        a[i] = temp;
+
+        // Heapify the reduced heap
+        adjust(a, 0, i);
+    }
+}
+
+// Driver code
+int main()
+{
+    int n;
+
+    // Taking array size from user
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int a[n];
+
+    // Taking array elements from user
+    printf("Enter %d elements: ", n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    // Sorting the array using Heap Sort
+    heap_sort(a, n);
+
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+
+    // Display count of operations
+    printf("Total operations (comparisons + swaps): %d\n", counter);
+
+    return 0;
+}
+
+Q2
+#include <stdio.h>
+int main()
+{
+    int a[2][2], b[2][2], c[2][2], i, j;
+    int m1, m2, m3, m4, m5, m6, m7;
+
+    printf("Enter the 4 elements of first matrix: ");
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            scanf("%d", &a[i][j]);
+
+    printf("Enter the 4 elements of second matrix: ");
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            scanf("%d", &b[i][j]);
+
+    printf("\nThe first matrix is\n");
+    for (i = 0; i < 2; i++)
+    {
+        printf("\n");
+        for (j = 0; j < 2; j++)
+            printf("%d\t", a[i][j]);
+    }
+
+    printf("\nThe second matrix is\n");
+    for (i = 0; i < 2; i++)
+    {
+        printf("\n");
+        for (j = 0; j < 2; j++)
+            printf("%d\t", b[i][j]);
+    }
+
+    m1 = (a[0][0] + a[1][1]) * (b[0][0] + b[1][1]);
+    m2 = (a[1][0] + a[1][1]) * b[0][0];
+    m3 = a[0][0] * (b[0][1] - b[1][1]);
+    m4 = a[1][1] * (b[1][0] - b[0][0]);
+    m5 = (a[0][0] + a[0][1]) * b[1][1];
+    m6 = (a[1][0] - a[0][0]) * (b[0][0] + b[0][1]);
+    m7 = (a[0][1] - a[1][1]) * (b[1][0] + b[1][1]);
+
+    c[0][0] = m1 + m4 - m5 + m7;
+    c[0][1] = m3 + m5;
+    c[1][0] = m2 + m4;
+    c[1][1] = m1 - m2 + m3 + m6;
+
+    printf("\nAfter multiplication using Strassen's algorithm \n");
+    for (i = 0; i < 2; i++)
+    {
+        printf("\n");
+        for (j = 0; j < 2; j++)
+            printf("%d\t", c[i][j]);
+    }
+
+    return 0;
+}
